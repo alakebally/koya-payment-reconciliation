@@ -3,7 +3,7 @@
 """Payment reconciliation."""
 
 import json
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from datetime import datetime
 
 # Store the latest attempt for each transaction
@@ -32,11 +32,11 @@ with open("payments.jsonl", "r", encoding="utf-8") as f:
                 latest_transactions[txn_id] = {
                     "timestamp": timestamp,
                     "status": event["status"],
-                   "amount": Decimal(str(event["amount"]).replace(",", ""))
+                    "amount": Decimal(str(event["amount"]).replace(",", ""))
                 }
 
-        except (json.JSONDecodeError, KeyError, TypeError, ValueError):
-            continue
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError, InvalidOperation):
+    continue
 
 # Count and sum only the latest successful attempts
 successful_transactions = [
